@@ -3,6 +3,9 @@
 
 import click
 
+import hashing
+from local import list_cache, clean_cache, add_to_cache
+
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
 @click.option("--verbose/--quiet", default=False)
@@ -51,7 +54,7 @@ def cache():
 
 @cache.command("list")
 def cache_list():
-    pass
+    list_cache()
 
 @cache.command("clean")
 @click.option(
@@ -59,8 +62,8 @@ def cache_list():
     expose_value=False,
     prompt="Remove all listed entries?"
 )
-def cache_clean(*, yes):
-    pass
+def cache_clean(*, ctx, yes):
+    clean_cache(verbose=ctx["verbose"])
 
 
 if __name__ == "__main__":
