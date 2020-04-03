@@ -1,0 +1,39 @@
+[project]
+name = "grief-cli"
+version = "0.1.0"
+description = "Genomic Reference IntErFace CLI"
+authors = [
+    "Bill Flynn <bill.flynn@jax.org>"
+]
+license = "MIT"
+readme = "README.md"
+python = "^3.6"
+homepage = "https://github.com/TheJacksonLaboratory/grief-cli"
+repository = "https://github.com/TheJacksonLaboratory/grief-cli"
+documentation = "https://github.com/TheJacksonLaboratory/grief-cli"
+
+keywords = ["reference", "cli", "genomics"]
+
+classifiers = [
+    "Topic :: Software Development"
+]
+
+# Requirements
+[dependencies]
+Click = "^7.0"
+
+[dev-dependencies]
+black = { version = "^18.3-alpha.0", python = "^3.6" }
+
+
+[build-system]
+requires = [
+    "setuptools >= 35.0.2",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 90
+target_version = ['py36']
+include = '\.pyi?$'
+exclude = '''
