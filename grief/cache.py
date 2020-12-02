@@ -5,7 +5,7 @@ import os
 import yaml
 from pathlib import Path
 
-import hashing
+from asset import Asset
 
 CACHE_DIR = Path(
     os.environ.get("XDG_CACHE_HOME", "~/.cache")
@@ -46,6 +46,12 @@ def write_cache(cache):
     with open(CACHE_DB, "w") as buff:
         yaml.dump_all(cache, stream=buff, explicit_start=True)
 
+def is_asset_in_cache(asset_name):
+    cache = read_cache()
+    for document in cache:
+        print(print_fmt.format(**document))
+
+
 
 def add_to_cache(hash_l, asset_name, **kwargs):
     cache = read_cache()
@@ -84,11 +90,10 @@ def validate_cache():
 
 def list_cache():
     cache = read_cache()
-    print_fmt = f"{{sha256_short:<{hashing.SHORT_HASH_LENGTH+1}}}  {{asset_name}}"
-    print(print_fmt.format(**dict(sha256_short="SHA256", asset_name="Asset Name")))
-    print(print_fmt.format(**dict(sha256_short="------", asset_name="----------")))
-    for document in cache:
-        print(print_fmt.format(**document))
+    print(Asset.print_fmt.format(**dict(sha256_short="SHA256", asset_name="Asset Name", is_cached="")))
+    print(Asset.print_fmt.format(**dict(sha256_short="------", asset_name="----------", is_cached="")))
+    for obj in cache:
+        print(obj)
     print()
 
 
@@ -97,3 +102,7 @@ def clean_cache(verbose=False):
     for asset in to_remove:
         print(f"rm {fname}")
         os.remove(asset.filepath)
+
+
+if __name__ == "__main__":
+    list_cache()

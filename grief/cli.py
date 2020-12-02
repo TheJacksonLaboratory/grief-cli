@@ -4,7 +4,8 @@
 import click
 
 import hashing
-from local import list_cache, clean_cache, add_to_cache
+from local import list_cache, clean_cache, add_to_cache, validate_cache
+from query import search_all, list_search_results
 
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
@@ -15,26 +16,27 @@ def cli(ctx, verbose):
     ctx.obj["verbose"] = verbose
 
 @cli.command()
-@click.argument("query", nargs=-1)
+@click.argument("query", nargs=-1, required=True)
 @click.option("--species", default=None)
 @click.option("--tool", default=None)
 @click.option("--assembly", default=None)
 @click.option("--contributor", default=None)
-def search(query, *, species, tool, assembly, contributor):
-    print(query)
+def search(query, **kwargs):#species, tool, assembly, contributor):
+    results = search_all(query, skip_remote=True, **kwargs)
+    list_search_results(results, query=query)
 
 @cli.command()
-@click.argument("asset", nargs=-1)
+@click.argument("assets", nargs=-1)
 @click.option("--json", is_flag=True, default=False)
 def info(assets, *, json=False):
     pass
 
 @cli.command()
-@click.argument("asset", nargs=-1)
+@click.argument("assets", nargs=-1)
 @click.option("--cache/--no-cache", default=True)
 @click.option("--overwrite/--no-overwrite", default=False)
 def pull(assets, *, cache, overwrite):
-    pass
+    validate_cache()
 
 @cli.command()
 @click.argument("asset_or_query", nargs=-1)
@@ -46,7 +48,8 @@ def pull(assets, *, cache, overwrite):
     prompt="Fetch all listed assets?"
 )
 def get(assets_or_query, *, cache, overwrite, yes):
-    pass
+    results = search_all(assets_or_query)
+    validate_cache()
 
 @cli.group()
 def cache():
